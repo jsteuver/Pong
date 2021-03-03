@@ -20,9 +20,25 @@ public class Ball : MonoBehaviour
         rb.velocity = new Vector2(xVector, yVector);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
+        rb.velocity = new Vector2(xVector, yVector);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.tag.Equals("Wall"))
+        {
+            yVector = yVector * -1.0f;
+        }
+        else if (collision.collider.gameObject.tag.Equals("Left"))
+        {
+            xVector = xVector * -1.0f;
+        }
+        else if (collision.collider.gameObject.tag.Equals("Right"))
+        {
+            xVector = xVector * -1.0f;
+        }
     }
 }
