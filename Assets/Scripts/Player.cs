@@ -5,28 +5,43 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private int speed = 10;
+    private float speed = 0.2f;
+    bool blockedUp, blockedDown;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        blockedUp = false;
+        blockedDown = false;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow) && !blockedDown)
         {
-            rb.velocity = new Vector2(0, speed * -1);
+            rb.MovePosition(new Vector2(transform.position.x, transform.position.y - speed));
+            blockedUp = false;
         }
-        else if (Input.GetKey(KeyCode.UpArrow))
+        else if (Input.GetKey(KeyCode.UpArrow) && !blockedUp)
         {
-            rb.velocity = new Vector2(0, speed);
+            rb.MovePosition(new Vector2(transform.position.x, transform.position.y + speed));
+            blockedDown = false;
         }
-        else
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.name.Equals("Top Wall"))
         {
-            rb.velocity = new Vector2(0, 0);
+            rb.MovePosition(new Vector2(transform.position.x, collision.gameObject.transform.position.y - (collision.gameObject.transform.localScale.y / 2.0f + this.transform.localScale.y / 2.0f)));
+            blockedUp = true;
+        }
+        else if (collision.gameObject.name.Equals("Bottom Wall"))
+        {
+            rb.MovePosition(new Vector2(transform.position.x, collision.gameObject.transform.position.y + (collision.gameObject.transform.localScale.y / 2.0f + this.transform.localScale.y / 2.0f)));
+            blockedDown = true;
         }
     }
 }
