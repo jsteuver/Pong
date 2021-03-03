@@ -22,22 +22,30 @@ public class Ball : MonoBehaviour
 
     void Update()
     {
-        rb = GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(xVector, yVector);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.tag.Equals("Wall"))
+        string tag = collision.collider.gameObject.tag;
+
+        if (tag.Equals("Wall"))
         {
             yVector = yVector * -1.0f;
         }
-        else if (collision.collider.gameObject.tag.Equals("Left"))
+        else if (tag.Equals("Player"))
         {
+            // TODO - Make smarter logic for when ball hits top/bottom of paddle
             xVector = xVector * -1.0f;
         }
-        else if (collision.collider.gameObject.tag.Equals("Right"))
+        else if (tag.Equals("Left"))
         {
+            // TODO - Change to score
+            xVector = xVector * -1.0f;
+        }
+        else if (tag.Equals("Right"))
+        {
+            // TODO - Change to score
             xVector = xVector * -1.0f;
         }
     }
